@@ -14,6 +14,9 @@ class ExpenseApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
+  final titleController = TextEditingController();
+  final valueController = TextEditingController();
+
   final _transactions = [
     Transaction(
       id: 't1',
@@ -35,7 +38,6 @@ class MyHomePage extends StatelessWidget {
           title: Text('Despesas Pessoais'),
         ),
         body: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Container(
@@ -46,51 +48,83 @@ class MyHomePage extends StatelessWidget {
                 ),
               ),
               Column(
-                  children: _transactions.map((tr) {
-                return Card(
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 15,
-                          vertical: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.purple,
-                            width: 2,
+                children: _transactions.map((tr) {
+                  return Card(
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 10,
                           ),
-                        ),
-                        padding: const EdgeInsets.all(10),
-                        child: Text('R\$ ${tr.value.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
+                          decoration: BoxDecoration(
+                            border: Border.all(
                               color: Colors.purple,
-                            )),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            tr.title,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                              width: 2,
                             ),
                           ),
-                          Text(
-                            DateFormat('d MMM y').format(tr.date),
-                            style: const TextStyle(
-                              color: Colors.grey,
+                          padding: const EdgeInsets.all(10),
+                          child: Text('R\$ ${tr.value.toStringAsFixed(2)}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Colors.purple,
+                              )),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              tr.title,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
+                            Text(
+                              DateFormat('d MMM y').format(tr.date),
+                              style: const TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+              Card(
+                  elevation: 5,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      children: <Widget>[
+                        TextField(
+                          controller: titleController,
+                          decoration: const InputDecoration(
+                            labelText: 'Título',
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              }).toList()),
+                        ),
+                        TextField(
+                          controller: valueController,
+                          decoration: const InputDecoration(
+                            labelText: 'Valor (R\$)',
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            print(titleController.text);
+                            print(valueController.text);
+                          },
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.purple,
+                          ),
+                          child: const Text('Adicionar Transação'),
+                        )
+                      ],
+                    ),
+                  ))
             ]));
   }
 }
