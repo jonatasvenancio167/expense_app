@@ -1,9 +1,10 @@
+import 'package:expenses/components/chart.dart';
 import 'package:expenses/components/transaction_form.dart';
 import 'package:expenses/components/transaction_list.dart';
 import 'package:expenses/models/transaction.dart';
 import 'package:flutter/material.dart';
 
-main() => runApp(ExpenseApp());
+main() => runApp(const ExpenseApp());
 
 class ExpenseApp extends StatelessWidget {
   const ExpenseApp({super.key});
@@ -15,8 +16,17 @@ class ExpenseApp extends StatelessWidget {
     return MaterialApp(
       home: const MyHomePage(),
       theme: theme.copyWith(
-        colorScheme: theme.colorScheme
-            .copyWith(primary: Colors.purple, secondary: Colors.amber),
+        colorScheme: theme.colorScheme.copyWith(
+          primary: Colors.purple,
+          secondary: Colors.purple,
+        ),
+        appBarTheme: const AppBarTheme(
+          titleTextStyle: TextStyle(
+            fontFamily: 'OpenSans',
+            fontSize: 18,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
       ),
     );
   }
@@ -31,20 +41,32 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _transactions = [
+  final List<Transaction> _transactions = [
     Transaction(
-      id: 't1',
-      title: 'Salário',
-      value: 500.00,
-      date: DateTime.now(),
+      id: '1',
+      title: 'Conta de Luz',
+      value: 110.0,
+      date: DateTime.now().subtract(
+        const Duration(days: 3),
+      ),
     ),
     Transaction(
-      id: 't2',
-      title: 'Conta de Luz',
-      value: 200.00,
-      date: DateTime.now(),
+      id: '2',
+      title: 'Conta de Água',
+      value: 110.0,
+      date: DateTime.now().subtract(
+        const Duration(days: 4),
+      ),
     )
   ];
+
+  List<Transaction> get _recentTransactions {
+    return _transactions.where((tr) {
+      return tr.date.isAfter(DateTime.now().subtract(
+        const Duration(days: 7),
+      ));
+    }).toList();
+  }
 
   _addTransaction(String title, double value) {
     final newTransaction = Transaction(
@@ -72,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Despesas Pessoais'), actions: <Widget>[
+      appBar: AppBar(title: const Text('Despesas Pessoais'), actions: <Widget>[
         IconButton(
           icon: const Icon(Icons.add),
           onPressed: () => _openTransactionFormModal(context),
@@ -82,13 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              child: const Card(
-                color: Colors.blue,
-                elevation: 5,
-                child: Text('Gráfico'),
-              ),
-            ),
+            Chart(_recentTransactions),
             TransactionList(_transactions),
           ],
         ),
