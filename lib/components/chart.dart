@@ -33,6 +33,12 @@ class Chart extends StatelessWidget {
     });
   }
 
+  double get _weekTotalValue {
+    return groupedTransactions.fold(0.0, (sum, tr) {
+      return sum + (tr['value'] as double);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
