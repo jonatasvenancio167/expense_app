@@ -37,8 +37,6 @@ class _TransactionFormState extends State<TransactionForm> {
         return;
       }
 
-      print(_selectedDate);
-
       setState(() {
         _selectedDate = pickedDate;
       });
